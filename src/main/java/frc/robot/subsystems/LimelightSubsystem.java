@@ -9,11 +9,34 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.APTree;
 
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new LimelightSubsystem. */
   private static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight-aptag");
+  private static APTree speedLookup = new APTree();
 
+  // Creates a table for the different velocities from different distances
+  private double [][] shooterData = {
+    {1.47, 20},    
+    {0.85, 30},
+    {0.6, 40},  
+  };
+
+  public LimelightSubsystem() {
+    speedLookup.InsertValues(shooterData);
+  }
+
+  ///////////////////////////////////////////////////////////
+  //            Data Used for Other Subsystems             //
+  ///////////////////////////////////////////////////////////
+  public double getShooterRPS () {
+    return speedLookup.GetValue(getTA());
+  }
+
+  ///////////////////////////////////////////////////////////
+  //                    Limelight Data                     //
+  ///////////////////////////////////////////////////////////
   public double getDoubleEntry(String entry) {
     return limelight.getEntry(entry).getDouble(0);
   }
@@ -40,10 +63,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public double getTY() {
     return getDoubleEntry("ty");
-  }
-
-  public LimelightSubsystem() {
-
   }
 
   @Override

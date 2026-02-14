@@ -6,17 +6,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShooterCmnd extends Command {
   /** Creates a new ShooterCmnd. */
   private final ShooterSubsystem shooterSubsystem;
-  private final double targetVelocity;
+  private final LimelightSubsystem limelightSubsystem;
 
-  public ShooterCmnd(ShooterSubsystem shooterSubsystem, double targetVelocity) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ShooterCmnd(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
-    this.targetVelocity = targetVelocity;
+    this.limelightSubsystem = limelightSubsystem;
     addRequirements(shooterSubsystem);
   }
 
@@ -27,7 +26,7 @@ public class ShooterCmnd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setVelocity(targetVelocity); 
+    shooterSubsystem.setVelocity(20); 
   }
 
   // Called once the command ends or is interrupted.
