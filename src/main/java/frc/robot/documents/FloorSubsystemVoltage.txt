@@ -1,0 +1,66 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Configs;
+
+public class FloorSubsystem extends SubsystemBase {
+  private final TalonFX topFloorMotor;
+  private final TalonFX bottomFloorMotor;
+
+  private final VoltageOut voltageRequest;
+
+  private double targetVoltage = 0;
+
+  public FloorSubsystem() {
+    bottomFloorMotor = new TalonFX(31);
+    topFloorMotor = new TalonFX(32);
+
+    voltageRequest = new VoltageOut(0);
+
+    topFloorMotor.getConfigurator().apply(Configs.floorMotor.floorVoltageConfig);
+    bottomFloorMotor.getConfigurator().apply(Configs.floorMotor.floorVoltageConfig);
+    
+    bottomFloorMotor.setControl(   
+      new Follower(topFloorMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+    );
+  }
+
+  public void setVelocity(double voltage) {
+    targetVoltage = voltage * 12.0;
+    topFloorMotor.setControl(voltageRequest.withOutput(targetVoltage));
+  }
+
+  public void stop() {
+    targetVoltage = 0;
+    topFloorMotor.setControl(voltageRequest.withOutput(0));
+  }
+
+  public double getFloorSpeed() {
+    return topFloorMotor.getVelocity().getValueAsDouble();
+  }
+
+  public boolean atTargetSpeed(double tolerance) {
+    boolean withinTolerance = (Math.abs(getFloorSpeed() - targetVoltage) < tolerance);
+    return withinTolerance;
+  }
+
+  public double gettargetVoltage() {
+    return targetVoltage;
+  }
+  
+  @Override
+  public void periodic() {
+  }
+}
+
+
+
+
+
+
+

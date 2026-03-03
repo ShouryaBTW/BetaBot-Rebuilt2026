@@ -1,0 +1,44 @@
+Feeder voltageRequest
+
+package frc.robot.subsystems;
+
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Configs;
+
+public class FeederSubsystem extends SubsystemBase {
+  private final TalonFX feederMotor;
+  private final VoltageOut voltageRequest;
+
+  public FeederSubsystem() {
+    feederMotor = new TalonFX(33);
+    voltageRequest = new VoltageOut(0);
+
+    feederMotor.getConfigurator().apply(Configs.feederMotor.feederVoltageConfig);
+  }
+
+  public void setVelocity(double voltage) {
+    feederMotor.setControl(voltageRequest.withOutput(voltage * 12.0)); 
+  }
+
+  public void stop() {
+    feederMotor.setControl(voltageRequest.withOutput(0));
+  }
+
+  public double getFeederSpeed() {
+    return feederMotor.getVelocity().getValueAsDouble();
+  }
+
+  public boolean atTargetSpeed(double targetvoltage, double tolerance) {
+      return Math.abs(getFeederSpeed() - targetvoltage) < tolerance;
+  }
+
+  @Override
+  public void periodic() {
+  }
+}
+
+
+
