@@ -146,8 +146,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return null;
+  public Command getRightSideAuto() {
+    return new SequentialCommandGroup(
+      new StartFeeder(s_feederSubsystem, 80)
+     );
+      
     // return new SequentialCommandGroup(
     //     new DriveToPoint(m_robotDrive, 3, 3, 270),
     //     new WaitCommand(1),
@@ -157,6 +160,17 @@ public class RobotContainer {
     // );
   }
 
+public Command getLeftSideAuto() {
+  return new SequentialCommandGroup(
+      new StartFeeder(s_feederSubsystem, 10)
+     );
+  }
+
+public Command getMiddleAuto() {
+  return new SequentialCommandGroup(
+      new StartFeeder(s_feederSubsystem, 40)
+     );
+  }
 //     public Command aimToAllowedTagOnce() {
 //     return Commands.defer(
 //         () -> {
